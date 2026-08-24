@@ -16,10 +16,10 @@ For the multi-host overview see the [repo README](../README.md); for the package
 | `kiro-setup` skill | `.kiro/skills/kiro-setup/` | Interactive credential setup |
 | Product skills | `.kiro/skills/` | `taruvi-app-developer`, `taruvi-refine-providers` |
 | MCP template | `mcp.json` | Server shape with `${VAR}` placeholders |
-| Scripts | `scripts/` | Local setup/scope verifiers used by Kiro hooks and steering |
+| Scripts | `.agents/hooks/taruvi/` via `.kiro/scripts` symlink | Shared setup/scope verifiers used by Kiro hooks and steering |
 
-Steering and hooks are the reason a Kiro package differs from the Claude/Cursor/Codex ones —
-those hosts have no equivalent.
+Steering and hook registrations are Kiro-native adapters around shared Taruvi guidance and
+guards. Other vendors need their own adapter files for equivalent automation.
 
 ---
 
@@ -66,11 +66,13 @@ If the clone contained a real key, **rotate that key** — it is in git history.
 ## 2. Install the plugin
 
 ```bash
-PLUGIN=/path/to/taruvi-plugin/kiro
+PLUGIN=/path/to/taruvi-agents-plugin/payload/.kiro
 
-mkdir -p .kiro/steering .kiro/hooks
+mkdir -p .agents/hooks .kiro/steering .kiro/hooks
+cp -a /path/to/taruvi-agents-plugin/payload/.agents/hooks/taruvi .agents/hooks/
 cp -a "$PLUGIN/steering/." .kiro/steering/
 cp -a "$PLUGIN/hooks/."    .kiro/hooks/
+ln -s ../.agents/hooks/taruvi .kiro/scripts
 ```
 
 ### Skills need a symlink swap
@@ -184,9 +186,8 @@ Each row tests a distinct mechanism. Run them in order.
 | 1 | In a fresh session, before running setup, ask for a feature (e.g. "add a list page for one of my datatables") | The agent notices `.env` is missing and stops, instead of writing code against an unconfigured app |
 | 2 | "setup taruvi" | One ask covering all three values + Generate API Key; keys echoed masked; **both** `mcp.json` and `.env` written |
 | 3 | "List the datatables in this app" | Real schema returns for your app slug |
-| 4 | Edit any `.tsx` file with v4 hook syntax (`const { data } = useList(...)`) | The `refine-v5-review` hook flags it with the v5 replacement |
-| 5 | Edit a `.md` file | Secret guard does **not** fire (it is scoped to config paths only) |
-| 6 | Restart dev server | App boots without an env error |
+| 4 | Edit a `.md` file | Secret guard does **not** fire (it is scoped to config paths only) |
+| 5 | Restart dev server | App boots without an env error |
 
 Test 1 is the important one — it verifies always-on steering, which covers the case where nobody
 invokes the setup skill. Tests 2 onward verify the skill and hooks.
@@ -219,7 +220,5 @@ Connection errors are logged under **Output → "Kiro - MCP Logs"**.
   key names were inferred by analogy with the Codex manifest, but no local-plugin loader has been
   confirmed to consume it. The copy-into-`.kiro/` path in step 2 does not depend on it, which is
   why it is the documented route.
-- **Hook latency.** `refine-v5-review` runs on every `.ts`/`.tsx` save. On a large refactor that
-  is chatty; disable it from the Agent Hooks view in the explorer if it gets in the way.
 - **Two copies of the key.** With the config-file path, the API key lives in both `.env` and
   `mcp.json`. The env-var path removes it from `mcp.json` only.

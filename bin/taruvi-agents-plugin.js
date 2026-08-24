@@ -23,6 +23,11 @@ const SHARED_SKILLS = [
   "taruvi-refine-providers",
 ];
 
+const OBSOLETE_INSTALLED_PATHS = [
+  ".kiro/hooks/refine-v5-review.json",
+  ".kiro/hooks/refine-v5-review.kiro.hook",
+];
+
 function usage(exitCode = 0) {
   const out = exitCode === 0 ? console.log : console.error;
   out(`Usage:
@@ -153,6 +158,12 @@ function installPayload(targetRoot) {
   copyDirectoryContents(path.join(payloadRoot, ".kiro"), path.join(targetRoot, ".kiro"));
 }
 
+function removeObsoleteInstalledPaths(targetRoot) {
+  for (const relativePath of OBSOLETE_INSTALLED_PATHS) {
+    removePath(path.join(targetRoot, relativePath));
+  }
+}
+
 function installSharedSkillSymlinks(targetRoot) {
   for (const vendor of [".claude", ".codex", ".cursor", ".kiro"]) {
     for (const skill of SHARED_SKILLS) {
@@ -174,6 +185,19 @@ function installSharedSkillSymlinks(targetRoot) {
       );
     }
   }
+}
+
+function installSharedHookSymlinks(targetRoot) {
+  const sharedTaruviHooks = path.join(targetRoot, ".agents", "hooks", "taruvi");
+  if (!pathExists(sharedTaruviHooks)) {
+    return;
+  }
+
+  ensureSymlink(
+    targetRoot,
+    path.join(".kiro", "scripts"),
+    "../.agents/hooks/taruvi"
+  );
 }
 
 function updateGitignore(targetRoot) {
@@ -225,7 +249,9 @@ function install(args) {
 
   fs.mkdirSync(targetRoot, { recursive: true });
   installPayload(targetRoot);
+  removeObsoleteInstalledPaths(targetRoot);
   installSharedSkillSymlinks(targetRoot);
+  installSharedHookSymlinks(targetRoot);
   const gitignoreUpdated = updateGitignore(targetRoot);
 
   console.log("Taruvi agent support installed.");

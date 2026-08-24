@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 import json
-import os
-import re
 import stat
 import sys
 from pathlib import Path

@@ -23,6 +23,7 @@ npx @taruvi/agents-plugin install
 The installer writes safe agent support files into the current project:
 
 - `.agents/skills/`
+- `.agents/hooks/`
 - `.claude/`
 - `.codex/`
 - `.cursor/`
@@ -40,8 +41,10 @@ block that the user pastes.
 
 ## Develop
 
-Shared product skills live once under `src/skills/`. Common setup behavior lives
-in `src/shared/setup-core.md`. Vendor setup skills are generated from that shared
+Shared product skills live once under `src/skills/`. Shared hook scripts live
+under `src/hooks/` and are installed into `.agents/hooks/`, with vendor folders
+symlinking to them when needed. Common setup behavior lives in
+`src/shared/setup-core.md`. Vendor setup skills are generated from that shared
 core plus vendor-specific guidance.
 
 Build the installer payload:

@@ -17,7 +17,7 @@ copy_dir() {
 
 reset_payload() {
   rm -rf "$PAYLOAD_DIR"
-  mkdir -p "$PAYLOAD_DIR/.agents/skills"
+  mkdir -p "$PAYLOAD_DIR/.agents/skills" "$PAYLOAD_DIR/.agents/hooks"
 }
 
 sync_portable_skills() {
@@ -31,6 +31,7 @@ sync_portable_skills() {
 copy_sources() {
   copy_dir "$SRC_DIR/skills/taruvi-app-developer" "$PAYLOAD_DIR/.agents/skills/taruvi-app-developer"
   copy_dir "$SRC_DIR/skills/taruvi-refine-providers" "$PAYLOAD_DIR/.agents/skills/taruvi-refine-providers"
+  copy_dir "$SRC_DIR/hooks/taruvi" "$PAYLOAD_DIR/.agents/hooks/taruvi"
 
   copy_dir "$SRC_DIR/vendors/claude/." "$PAYLOAD_DIR/.claude"
   copy_dir "$SRC_DIR/vendors/codex/." "$PAYLOAD_DIR/.codex"
@@ -39,6 +40,7 @@ copy_sources() {
 
   rm -rf \
     "$PAYLOAD_DIR/.kiro/settings" \
+    "$PAYLOAD_DIR/.kiro/scripts" \
     "$PAYLOAD_DIR/.codex/log" \
     "$PAYLOAD_DIR/.codex/.personality_migration" \
     "$PAYLOAD_DIR/.codex/config.toml"

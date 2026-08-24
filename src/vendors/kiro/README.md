@@ -1,13 +1,13 @@
 # Taruvi Plugin — Kiro
 
-Plugin root for Kiro. See the [repo README](../README.md) for the multi-host overview, and
+Plugin root for Kiro. See the repo README for the multi-host overview, and
 [`INSTRUCTIONS.md`](INSTRUCTIONS.md) for step-by-step install, credential setup, and a test matrix.
 
 ```
 kiro/
 ├── .kiro-plugin/plugin.json   # manifest
 ├── mcp.json                   # MCP servers (placeholders — do not commit secrets)
-├── scripts/                   # local setup/scope verifiers for hooks + steering
+├── scripts/                   # created during install as a shared-script symlink
 ├── skills/                    # kiro-setup + shared product skills
 ├── steering/                  # always-on + fileMatch guidance
 └── hooks/                     # event-driven automation
@@ -21,13 +21,18 @@ Copy this directory into your Kiro plugins folder:
 cp -a /path/to/taruvi-plugin/kiro ~/.kiro/plugins/local/taruvi-plugin
 ```
 
-Or wire the pieces into a workspace directly:
+Or wire the pieces from a built installer payload into a workspace directly:
 
 ```bash
-cp -a kiro/steering/.  /path/to/project/.kiro/steering/
-cp -a kiro/hooks/.     /path/to/project/.kiro/hooks/
-cp -a kiro/skills/.    /path/to/project/.kiro/skills/
-cp    kiro/mcp.json    /path/to/project/.kiro/settings/mcp.json
+PAYLOAD=/path/to/taruvi-agents-plugin/payload
+
+mkdir -p /path/to/project/.agents/hooks
+cp -a "$PAYLOAD/.agents/hooks/taruvi" /path/to/project/.agents/hooks/
+cp -a "$PAYLOAD/.kiro/steering/."  /path/to/project/.kiro/steering/
+cp -a "$PAYLOAD/.kiro/hooks/."     /path/to/project/.kiro/hooks/
+cp -a "$PAYLOAD/.kiro/skills/."    /path/to/project/.kiro/skills/
+cp    "$PAYLOAD/.kiro/mcp.json"    /path/to/project/.kiro/settings/mcp.json
+ln -s ../.agents/hooks/taruvi      /path/to/project/.kiro/scripts
 ```
 
 ## Configure MCP (interactive)
@@ -50,9 +55,9 @@ cp    kiro/mcp.json    /path/to/project/.kiro/settings/mcp.json
 | Piece | Notes |
 |---|---|
 | `steering/` | Kiro's guidance mechanism. `taruvi-preflight.md` and `functional-app.md` are always on; `refine-v5.md` and `ui-guidelines.md` load conditionally via `inclusion: fileMatch`. |
-| `hooks/` | `refine-v5-review` catches v4 hook syntax on save. `taruvi-secret-guard` is a `preToolUse` check against committing API keys. |
+| `hooks/` | Setup and safety automation, including secret checks and MCP scope verification. |
 | `mcp.json` | Kiro shape — `type: "http"`, `disabled`, `autoApprove`, `url` + `headers` for HTTP servers. |
-| `scripts/` | `check-taruvi-setup.py` and `mcp_scope.py`, used by hooks and steering to prevent half-configured or inherited MCP connections. |
+| `scripts/` | Symlink to shared `.agents/hooks/taruvi` scripts, used by hooks and steering to prevent half-configured or inherited MCP connections. |
 
 Kiro also reads a root `AGENTS.md` automatically, so apps scaffolded from the
 `agents-md-template.md` reference keep working without duplication. Steering adds conditional

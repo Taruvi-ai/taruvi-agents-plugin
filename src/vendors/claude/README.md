@@ -8,6 +8,17 @@ claude --plugin-dir /path/to/taruvi-plugin/claude
 
 Or install from the marketplace with `/plugin install`, then `/reload-plugins` if prompted.
 
+If this directory has been copied into a project by the installer, launch Claude Code with that
+project-local plugin directory:
+
+```bash
+claude --plugin-dir /path/to/project/.claude
+```
+
+Project-local `.claude/skills` can load even when the Claude plugin itself was not enabled at
+startup. In that case `claude-setup` may run, but `claude mcp list` will still show no Taruvi
+server because MCP servers cannot be hot-attached from a skill mid-session.
+
 ## Configure MCP (interactive)
 
 1. Ask "setup taruvi" to load the **claude-setup** skill.

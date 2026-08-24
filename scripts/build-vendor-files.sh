@@ -56,6 +56,11 @@ write_setup_skill() {
 Use Claude Code plugin conventions.
 
 - Prefer plugin `userConfig` values when the plugin is installed through Claude.
+- Project-local `.claude/skills` can load even when the Claude plugin was not
+  enabled at startup. If `claude mcp list` shows no Taruvi server, the fix is
+  to exit and relaunch Claude Code with the plugin loaded, for example
+  `claude --plugin-dir /path/to/project/.claude`, then configure plugin
+  `userConfig`.
 - If writing a project-local MCP file is required, write `.claude/.mcp.json`.
 - Use `${user_config.taruvi_tenant}`, `${user_config.taruvi_api_key}`,
   `${user_config.taruvi_app_slug}`, and `${user_config.context7_api_key}` only
@@ -72,6 +77,10 @@ Use Codex plugin conventions.
 - Do not edit `.codex/config.toml` as part of setup.
 - Keep bundled plugin files secret-free. Use placeholders in templates and real
   values only in local ignored config.
+- After writing `.codex/.mcp.json`, restart or reload the Codex plugin session
+  before verifying tools. A running session can have valid config on disk while
+  `mcp__taruvi__...` tools are still absent because MCP discovery happened at
+  session load.
 - After changing MCP config, tell the user to restart or reload the relevant
   Codex/ChatGPT plugin session.
 EOF
@@ -95,6 +104,29 @@ Use Kiro workspace conventions.
 
 - Write real MCP credentials only to `.kiro/settings/mcp.json`.
 - Keep `.kiro/mcp.json` as the secret-free plugin template.
+- The `taruvi` MCP server must use Kiro's HTTP transport shape:
+
+  ```json
+  {
+    "mcpServers": {
+      "taruvi": {
+        "type": "http",
+        "url": "https://<tenant>.taruvi.cloud/mcp/",
+        "headers": {
+          "Authorization": "Api-Key <generated-key>",
+          "X-App-Slug": "<app-slug>"
+        },
+        "disabled": false,
+        "autoApprove": []
+      }
+    }
+  }
+  ```
+
+- Do not use `/api/apps/<app-slug>/mcp/`; Taruvi's MCP endpoint is `/mcp/`
+  and the app context belongs in the `X-App-Slug` header.
+- After writing `.env` or `.kiro/settings/mcp.json`, set both files to owner
+  read/write only (`chmod 600 .env .kiro/settings/mcp.json` when they exist).
 - Kiro merges config with precedence `user < workspace`; confirm the workspace
   connection before any Taruvi MCP mutation.
 - After writing `.kiro/settings/mcp.json`, tell the user to reconnect the

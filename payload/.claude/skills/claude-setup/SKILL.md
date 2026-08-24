@@ -94,6 +94,11 @@ values at startup; hot reload is not enough.
 Use Claude Code plugin conventions.
 
 - Prefer plugin `userConfig` values when the plugin is installed through Claude.
+- Project-local `.claude/skills` can load even when the Claude plugin was not
+  enabled at startup. If `claude mcp list` shows no Taruvi server, the fix is
+  to exit and relaunch Claude Code with the plugin loaded, for example
+  `claude --plugin-dir /path/to/project/.claude`, then configure plugin
+  `userConfig`.
 - If writing a project-local MCP file is required, write `.claude/.mcp.json`.
 - Use `${user_config.taruvi_tenant}`, `${user_config.taruvi_api_key}`,
   `${user_config.taruvi_app_slug}`, and `${user_config.context7_api_key}` only

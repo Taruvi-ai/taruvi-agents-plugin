@@ -12,7 +12,7 @@
   },
   "then": {
     "type": "runCommand",
-    "command": "python3 scripts/check-taruvi-setup.py",
+    "command": "python3 .kiro/scripts/check-taruvi-setup.py",
     "timeout": 30
   }
 }

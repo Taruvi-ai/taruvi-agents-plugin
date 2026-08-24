@@ -16,6 +16,7 @@ For the multi-host overview see the [repo README](../README.md); for the package
 | `kiro-setup` skill | `.kiro/skills/kiro-setup/` | Interactive credential setup |
 | Product skills | `.kiro/skills/` | `taruvi-app-developer`, `taruvi-refine-providers` |
 | MCP template | `mcp.json` | Server shape with `${VAR}` placeholders |
+| Scripts | `scripts/` | Local setup/scope verifiers used by Kiro hooks and steering |
 
 Steering and hooks are the reason a Kiro package differs from the Claude/Cursor/Codex ones —
 those hosts have no equivalent.
@@ -140,8 +141,8 @@ The skill derives the MCP tenant from `TARUVI_SITE_URL`, so you never type the s
 Only doing the first is the most common mistake. Without `.env`, `src/taruviClient.ts` throws
 "Missing required environment variable" and every page fails.
 
-Note the format difference: `.env` wants `TARUVI_SITE_URL` as a **full URL**
-(`https://<tenant>.taruvi.cloud`); MCP config wants the **bare subdomain**.
+MCP config uses the same full URL as `.env`, but points at the tenant-level MCP endpoint:
+`https://<tenant>.taruvi.cloud/mcp/`. The app context goes in the `X-App-Slug` header.
 
 ### Storing the API key
 
@@ -198,7 +199,9 @@ invokes the setup skill. Tests 2 onward verify the skill and hooks.
 |---|---|
 | Missing app context | app slug / `X-App-Slug` |
 | Auth / 401 | API key or tenant |
-| URL contains a literal `${TARUVI_TENANT}` | Variable not on the approved list, or not exported |
+| URL contains a literal `${TARUVI_SITE_URL}` | Variable not on the approved list, or not exported |
+| `No authorization support detected` | Wrong remote MCP shape; use `"type": "http"` with static `headers` |
+| 404 on `/api/apps/<app>/mcp/` | Wrong endpoint; use `/mcp/` and put the app slug in `X-App-Slug` |
 | Server not listed | Wrong config path, or needs reconnect |
 | `context7` won't start | `npx` unavailable, or bad Context7 key |
 | App: "Missing required environment variable" | `.env` absent or incomplete |

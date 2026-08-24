@@ -97,5 +97,9 @@ Use Codex plugin conventions.
 - Do not edit `.codex/config.toml` as part of setup.
 - Keep bundled plugin files secret-free. Use placeholders in templates and real
   values only in local ignored config.
+- After writing `.codex/.mcp.json`, restart or reload the Codex plugin session
+  before verifying tools. A running session can have valid config on disk while
+  `mcp__taruvi__...` tools are still absent because MCP discovery happened at
+  session load.
 - After changing MCP config, tell the user to restart or reload the relevant
   Codex/ChatGPT plugin session.

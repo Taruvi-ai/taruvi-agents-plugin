@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "taruvi": {
+      "type": "http",
+      "url": "${TARUVI_SITE_URL}/mcp/",
+      "headers": {
+        "Authorization": "Api-Key ${TARUVI_API_KEY}",
+        "X-App-Slug": "${TARUVI_APP_SLUG}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"],

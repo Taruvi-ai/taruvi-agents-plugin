@@ -11,7 +11,7 @@
   },
   "then": {
     "type": "runCommand",
-    "command": "python3 scripts/mcp_scope.py --quiet",
+    "command": "python3 .kiro/scripts/mcp_scope.py --quiet",
     "timeout": 20
   }
 }

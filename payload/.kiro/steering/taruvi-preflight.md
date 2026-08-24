@@ -37,7 +37,7 @@ alongside the workspace ones in the same session.
 Before the first Taruvi MCP tool call in a session, run:
 
 ```bash
-python3 scripts/mcp_scope.py        # add -v for the full server inventory
+python3 .kiro/scripts/mcp_scope.py        # add -v for the full server inventory
 ```
 
 | Exit | Meaning | What to do |
@@ -120,7 +120,7 @@ Taruvi setup has two separate outputs. Having one working does not mean the othe
 | `.kiro/settings/mcp.json` | the agent → platform | Kiro MCP client |
 | `.env` | the running app → platform | `vite.config.ts` → `__TARUVI_*__` globals |
 
-`python3 scripts/check-taruvi-setup.py` verifies both at once, including whether they agree on
+`python3 .kiro/scripts/check-taruvi-setup.py` verifies both at once, including whether they agree on
 tenant and app slug.
 
 Before building or debugging app features, confirm `.env` exists with `TARUVI_SITE_URL`,

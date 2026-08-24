@@ -95,6 +95,29 @@ Use Kiro workspace conventions.
 
 - Write real MCP credentials only to `.kiro/settings/mcp.json`.
 - Keep `.kiro/mcp.json` as the secret-free plugin template.
+- The `taruvi` MCP server must use Kiro's HTTP transport shape:
+
+  ```json
+  {
+    "mcpServers": {
+      "taruvi": {
+        "type": "http",
+        "url": "https://<tenant>.taruvi.cloud/mcp/",
+        "headers": {
+          "Authorization": "Api-Key <generated-key>",
+          "X-App-Slug": "<app-slug>"
+        },
+        "disabled": false,
+        "autoApprove": []
+      }
+    }
+  }
+  ```
+
+- Do not use `/api/apps/<app-slug>/mcp/`; Taruvi's MCP endpoint is `/mcp/`
+  and the app context belongs in the `X-App-Slug` header.
+- After writing `.env` or `.kiro/settings/mcp.json`, set both files to owner
+  read/write only (`chmod 600 .env .kiro/settings/mcp.json` when they exist).
 - Kiro merges config with precedence `user < workspace`; confirm the workspace
   connection before any Taruvi MCP mutation.
 - After writing `.kiro/settings/mcp.json`, tell the user to reconnect the

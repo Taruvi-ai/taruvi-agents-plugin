@@ -3,6 +3,15 @@
 Source of truth for Taruvi agent support across Claude, Codex, Cursor, and
 Kiro.
 
+The repository root is also a portable Agent Plugins v1 package:
+
+- `plugin.json` is the standards-compliant root manifest.
+- `skills/` is the fixed Agent Plugins skill discovery location, generated
+  from `src/skills/`.
+- `mcp.json` is intentionally empty for now because Agent Plugins v1 does not
+  define portable secret or tenant configuration for Taruvi's remote MCP
+  endpoint. Vendor-specific MCP templates remain under `payload/`.
+
 ## Install into a Taruvi template
 
 From a cloned Taruvi hacks template:

@@ -5,6 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SRC_DIR="$REPO_ROOT/src"
 PAYLOAD_DIR="$REPO_ROOT/payload"
+PORTABLE_SKILLS_DIR="$REPO_ROOT/skills"
 SETUP_CORE="$SRC_DIR/shared/setup-core.md"
 
 copy_dir() {
@@ -17,6 +18,14 @@ copy_dir() {
 reset_payload() {
   rm -rf "$PAYLOAD_DIR"
   mkdir -p "$PAYLOAD_DIR/.agents/skills"
+}
+
+sync_portable_skills() {
+  rm -rf "$PORTABLE_SKILLS_DIR"
+  mkdir -p "$PORTABLE_SKILLS_DIR"
+
+  copy_dir "$SRC_DIR/skills/taruvi-app-developer" "$PORTABLE_SKILLS_DIR/taruvi-app-developer"
+  copy_dir "$SRC_DIR/skills/taruvi-refine-providers" "$PORTABLE_SKILLS_DIR/taruvi-refine-providers"
 }
 
 copy_sources() {
@@ -191,6 +200,7 @@ assert_clean_payload() {
 }
 
 reset_payload
+sync_portable_skills
 copy_sources
 generate_setup_skills
 assert_clean_payload

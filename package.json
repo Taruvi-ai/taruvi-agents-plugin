@@ -8,14 +8,18 @@
   },
   "scripts": {
     "build:vendor-files": "bash scripts/build-vendor-files.sh",
+    "validate:agent-plugin": "node scripts/validate-agent-plugin.mjs",
     "prepack": "npm run build:vendor-files",
-    "test": "npm run build:vendor-files && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
+    "test": "npm run validate:agent-plugin && npm run build:vendor-files && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
   },
   "files": [
     "bin/",
+    "mcp.json",
     "llms.txt",
     "payload/",
+    "plugin.json",
     "scripts/",
+    "skills/",
     "src/",
     "README.md"
   ],

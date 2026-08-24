@@ -93,6 +93,11 @@ values at startup; hot reload is not enough.
 
 Use Codex plugin conventions.
 
+- Workspace `.codex/skills` can load even when the Codex plugin itself is not
+  installed/enabled for the running session. If `.codex/.mcp.json` is valid but
+  `mcp__taruvi__...` tools are absent, the MCP server was not discovered by
+  Codex. Install/enable the Codex plugin so `.codex/.codex-plugin/plugin.json`
+  loads `.codex/.mcp.json`, or configure Taruvi in Codex's active MCP config.
 - If writing a project-local MCP file is required, write `.codex/.mcp.json`.
 - Do not edit `.codex/config.toml` as part of setup.
 - Keep bundled plugin files secret-free. Use placeholders in templates and real

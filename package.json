@@ -1,0 +1,38 @@
+{
+  "name": "@taruvi/agents-plugin",
+  "version": "0.1.0",
+  "description": "Installer for Taruvi agent support across Claude, Codex, Cursor, and Kiro.",
+  "type": "module",
+  "bin": {
+    "taruvi-agents-plugin": "./bin/taruvi-agents-plugin.js"
+  },
+  "scripts": {
+    "build:vendor-files": "bash scripts/build-vendor-files.sh",
+    "prepack": "npm run build:vendor-files",
+    "test": "npm run build:vendor-files && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
+  },
+  "files": [
+    "bin/",
+    "llms.txt",
+    "payload/",
+    "scripts/",
+    "src/",
+    "README.md"
+  ],
+  "keywords": [
+    "taruvi",
+    "agents",
+    "plugin",
+    "codex",
+    "claude",
+    "cursor",
+    "kiro"
+  ],
+  "author": {
+    "name": "Taruvi"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

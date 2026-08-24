@@ -1,7 +1,6 @@
 {
   "mcpServers": {
     "taruvi": {
-      "type": "http",
       "url": "https://${TARUVI_TENANT}.taruvi.cloud/mcp/",
       "headers": {
         "Authorization": "Api-Key ${TARUVI_API_KEY}",
@@ -12,10 +11,11 @@
       "command": "npx",
       "args": [
         "-y",
-        "@upstash/context7-mcp",
-        "--api-key",
-        "${CONTEXT7_API_KEY}"
-      ]
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
     }
   }
 }

@@ -9,8 +9,9 @@
   "scripts": {
     "build:vendor-files": "bash scripts/build-vendor-files.sh",
     "validate:agent-plugin": "node scripts/validate-agent-plugin.mjs",
+    "validate:vendors": "node scripts/validate-vendor-files.mjs",
     "prepack": "npm run build:vendor-files",
-    "test": "npm run validate:agent-plugin && npm run build:vendor-files && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
+    "test": "npm run validate:agent-plugin && npm run build:vendor-files && npm run validate:vendors && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
   },
   "files": [
     "bin/",

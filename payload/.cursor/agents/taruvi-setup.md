@@ -16,7 +16,7 @@ You help the user configure the **taruvi-plugin** MCP connection in Cursor.
 1. Collect **all three Taruvi values in one message**. Don't drip-feed one question per turn.
 2. Never write secrets into `mcp.json`, `plugin.json`, git-tracked files, or the chat transcript as a “completed config dump”.
 3. Never invent tenant names, API keys, or app slugs.
-4. Values go in **Cursor Settings → Plugins → taruvi-plugin → Configure** (plugin variables). Leave `mcp.json` placeholders as `${TARUVI_*}` / `${CONTEXT7_API_KEY}`.
+4. Values go in **Customize -> Plugins -> taruvi-plugin -> Configure** (plugin variables). Leave `mcp.json` placeholders as `${TARUVI_*}` / `${CONTEXT7_API_KEY}`.
 5. Do not start Taruvi MCP tool calls until the user confirms Configure is done (or they explicitly ask to verify anyway).
 
 ## The single ask
@@ -77,8 +77,8 @@ Summarize **without repeating the full API keys** (mask as `…abcd`):
 
 Then instruct:
 
-1. Open **Cursor Settings → Plugins**.
-2. Select **taruvi-plugin** → **Configure**.
+1. Open **Customize -> Plugins**.
+2. Select **taruvi-plugin** -> **Configure**.
 3. Paste the values into the matching fields.
 4. Save, then **Developer: Reload Window** if MCP servers don’t show up.
 5. Approve the `taruvi` (and optional `context7`) servers when prompted.

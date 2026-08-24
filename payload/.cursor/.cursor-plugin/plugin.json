@@ -3,6 +3,10 @@
   "description": "Taruvi skills + MCP for building Taruvi apps in Cursor",
   "version": "1.0.0",
   "author": { "name": "R. Surya Prakash" },
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "agents": "./agents/",
+  "commands": "./commands/",
   "mcpServers": "./mcp.json",
   "variables": {
     "type": "object",

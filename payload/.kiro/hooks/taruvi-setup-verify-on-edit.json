@@ -1,18 +1,16 @@
 {
-  "name": "Verify Taruvi Setup On Config Edit",
-  "version": "1.0.0",
-  "description": "After .env or an MCP config is saved, re-run the setup checker so a half-finished setup is caught at edit time instead of at app startup.",
-  "when": {
-    "type": "fileEdited",
-    "patterns": [
-      "**/.env",
-      "**/.kiro/settings/mcp.json",
-      "**/.kiro/mcp.json"
-    ]
-  },
-  "then": {
-    "type": "runCommand",
-    "command": "python3 .kiro/scripts/check-taruvi-setup.py",
-    "timeout": 30
-  }
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Verify Taruvi Setup On Config Edit",
+      "description": "After .env or an MCP config is saved, re-run the setup checker so a half-finished setup is caught at edit time instead of at app startup.",
+      "trigger": "PostFileSave",
+      "matcher": "(^|/)(\\.env|\\.kiro/settings/mcp\\.json|\\.kiro/mcp\\.json)$",
+      "action": {
+        "type": "command",
+        "command": "python3 .kiro/scripts/check-taruvi-setup.py"
+      },
+      "timeout": 30
+    }
+  ]
 }

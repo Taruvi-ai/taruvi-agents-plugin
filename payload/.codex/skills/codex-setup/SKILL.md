@@ -94,17 +94,18 @@ values at startup; hot reload is not enough.
 Use Codex plugin conventions.
 
 - Workspace `.codex/skills` can load even when the Codex plugin itself is not
-  installed/enabled for the running session. If `.codex/.mcp.json` is valid but
-  `mcp__taruvi__...` tools are absent, the MCP server was not discovered by
-  Codex. Install/enable the Codex plugin so `.codex/.codex-plugin/plugin.json`
-  loads `.codex/.mcp.json`, or configure Taruvi in Codex's active MCP config.
-- If writing a project-local MCP file is required, write `.codex/.mcp.json`.
-- Do not edit `.codex/config.toml` as part of setup.
+  installed/enabled for the running session. If Taruvi tools are absent, the
+  Taruvi MCP server was not discovered by Codex.
+- Configure Taruvi in Codex's active MCP config. Prefer project-local
+  `.codex/config.toml` for a trusted Taruvi app workspace, or user-level
+  `~/.codex/config.toml` for a personal reusable connection.
+- If writing project-local MCP config, write `.codex/config.toml` and keep it
+  gitignored. Do not write real Taruvi credentials to `.codex/.mcp.json`; the
+  plugin-bundled `.mcp.json` is only for secret-free bundled servers.
 - Keep bundled plugin files secret-free. Use placeholders in templates and real
   values only in local ignored config.
-- After writing `.codex/.mcp.json`, restart or reload the Codex plugin session
-  before verifying tools. A running session can have valid config on disk while
-  `mcp__taruvi__...` tools are still absent because MCP discovery happened at
-  session load.
+- A Taruvi streamable HTTP config needs `url = "https://<tenant>.taruvi.cloud/mcp/"`
+  and `http_headers` containing `Authorization = "Api-Key <generated-key>"` and
+  `X-App-Slug = "<app-slug>"`.
 - After changing MCP config, tell the user to restart or reload the relevant
-  Codex/ChatGPT plugin session.
+  Codex/ChatGPT session before verifying tools.

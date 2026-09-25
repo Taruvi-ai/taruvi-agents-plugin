@@ -46,6 +46,15 @@ copy_sources() {
     "$PAYLOAD_DIR/.codex/config.toml"
 }
 
+# Emit a YAML double-quoted scalar. Plain scalars break on ": ", leading
+# indicators, and " #", so every generated frontmatter value is quoted.
+yaml_quote() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  printf '"%s"' "$value"
+}
+
 write_setup_skill() {
   local vendor="$1"
   local skill_dir="$2"
@@ -55,8 +64,8 @@ write_setup_skill() {
   mkdir -p "$skill_dir"
   {
     printf '%s\n' '---'
-    printf 'name: %s\n' "$name"
-    printf 'description: %s\n' "$description"
+    printf 'name: %s\n' "$(yaml_quote "$name")"
+    printf 'description: %s\n' "$(yaml_quote "$description")"
     printf '%s\n\n' '---'
     printf '# %s\n\n' "$name"
     cat "$SETUP_CORE"

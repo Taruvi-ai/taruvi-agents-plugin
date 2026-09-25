@@ -1,6 +1,6 @@
 ---
-name: kiro-setup
-description: Configure Taruvi for Kiro: app .env plus Kiro workspace MCP guidance.
+name: "kiro-setup"
+description: "Configure Taruvi for Kiro: app .env plus Kiro workspace MCP guidance."
 ---
 
 # kiro-setup

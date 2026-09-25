@@ -1,6 +1,6 @@
 ---
-name: claude-setup
-description: Configure Taruvi for Claude Code: app .env plus Claude plugin MCP/userConfig guidance.
+name: "claude-setup"
+description: "Configure Taruvi for Claude Code: app .env plus Claude plugin MCP/userConfig guidance."
 ---
 
 # claude-setup

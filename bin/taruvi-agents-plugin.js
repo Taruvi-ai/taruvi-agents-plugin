@@ -111,15 +111,43 @@ function verifyTemplate(target, allowNonTemplate) {
   );
 }
 
+function clearConflictingDestination(destination, sourceIsDirectory) {
+  let stats;
+  try {
+    stats = fs.lstatSync(destination);
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return;
+    }
+    throw error;
+  }
+
+  // A symlink or file where we need a real directory (or vice versa) makes
+  // fs.cpSync throw EISDIR/ENOTDIR. Stale symlinks from earlier installs are
+  // the common case, so replace the destination instead of failing.
+  const destinationIsDirectory = stats.isDirectory() && !stats.isSymbolicLink();
+  if (sourceIsDirectory !== destinationIsDirectory) {
+    fs.rmSync(destination, { recursive: true, force: true });
+  }
+}
+
 function copyDirectoryContents(source, destination) {
   if (!pathExists(source)) {
     return;
   }
 
+  clearConflictingDestination(destination, true);
   fs.mkdirSync(destination, { recursive: true });
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     const from = path.join(source, entry.name);
     const to = path.join(destination, entry.name);
+
+    if (entry.isDirectory()) {
+      copyDirectoryContents(from, to);
+      continue;
+    }
+
+    clearConflictingDestination(to, false);
     fs.cpSync(from, to, {
       recursive: true,
       force: true,

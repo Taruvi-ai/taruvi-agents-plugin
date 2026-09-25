@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateSkillContent } from "./lib/skill-frontmatter.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -9,7 +10,6 @@ const root = path.resolve(__dirname, "..");
 const PLUGIN_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json";
 const MCP_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json";
 const PLUGIN_NAME_RE = /^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/;
-const SKILL_NAME_RE = /^(?!.*--)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
 const errors = [];
 
@@ -198,41 +198,6 @@ function validateMcpConfig() {
   }
 }
 
-function parseFrontmatter(content, skillPath) {
-  if (!content.startsWith("---\n")) {
-    fail(`${skillPath} must start with YAML frontmatter.`);
-    return null;
-  }
-
-  const end = content.indexOf("\n---", 4);
-  if (end === -1) {
-    fail(`${skillPath} must close YAML frontmatter.`);
-    return null;
-  }
-
-  const frontmatter = {};
-  let currentKey = null;
-  for (const line of content.slice(4, end).split(/\r?\n/)) {
-    if (/^\s/.test(line)) {
-      continue;
-    }
-    const match = line.match(/^([a-zA-Z0-9_-]+):(?:\s*(.*))?$/);
-    if (!match) {
-      fail(`${skillPath} has unsupported frontmatter line: ${line}`);
-      continue;
-    }
-    currentKey = match[1];
-    const value = match[2] ?? "";
-    frontmatter[currentKey] = value === ">" ? "__block__" : value.replace(/^["']|["']$/g, "");
-  }
-
-  if (currentKey === null) {
-    fail(`${skillPath} has empty frontmatter.`);
-  }
-
-  return frontmatter;
-}
-
 function validateSkills() {
   const skillsDir = path.join(root, "skills");
   if (!fs.existsSync(skillsDir)) return;
@@ -257,17 +222,13 @@ function validateSkills() {
     }
 
     assertContained(relativeSkillFile);
-    const frontmatter = parseFrontmatter(fs.readFileSync(skillFile, "utf8"), relativeSkillFile);
-    if (!frontmatter) continue;
 
-    if (frontmatter.name !== entry.name) {
-      fail(`${relativeSkillFile} name must match its parent directory.`);
-    }
-    if (!SKILL_NAME_RE.test(frontmatter.name || "") || frontmatter.name.length > 64) {
-      fail(`${relativeSkillFile} name must be lowercase letters, numbers, and hyphens.`);
-    }
-    if (!frontmatter.description || frontmatter.description.length > 1024) {
-      fail(`${relativeSkillFile} description must be present and at most 1024 chars.`);
+    for (const error of validateSkillContent({
+      content: fs.readFileSync(skillFile, "utf8"),
+      label: relativeSkillFile,
+      expectedName: entry.name,
+    })) {
+      fail(error);
     }
   }
 }

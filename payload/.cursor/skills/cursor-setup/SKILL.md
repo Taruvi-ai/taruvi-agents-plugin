@@ -1,6 +1,6 @@
 ---
-name: cursor-setup
-description: Configure Taruvi for Cursor: app .env plus Cursor plugin variables guidance.
+name: "cursor-setup"
+description: "Configure Taruvi for Cursor: app .env plus Cursor plugin variables guidance."
 ---
 
 # cursor-setup

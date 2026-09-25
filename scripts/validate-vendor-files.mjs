@@ -2,6 +2,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { validateSkillContent } from "./lib/skill-frontmatter.mjs";
 
 const root = process.cwd();
 const errors = [];
@@ -156,10 +157,57 @@ function validateKiroHooks() {
   }
 }
 
+// Validate the extracted artifact, not just src/. Generated setup skills only
+// exist in payload/, so this is the gate that has to catch broken frontmatter.
+function findSkillFiles(startDir) {
+  const found = [];
+  if (!fs.existsSync(startDir)) return found;
+
+  const stack = [startDir];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const entryPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(entryPath);
+      } else if (entry.isFile() && entry.name === "SKILL.md") {
+        found.push(entryPath);
+      }
+    }
+  }
+  return found.sort();
+}
+
+function validatePayloadSkills() {
+  const payloadDir = abs("payload");
+  if (!fs.existsSync(payloadDir)) {
+    fail("payload/ is missing. Run npm run build:vendor-files before validating.");
+    return;
+  }
+
+  const skillFiles = findSkillFiles(payloadDir);
+  if (skillFiles.length === 0) {
+    fail("payload/ contains no SKILL.md files.");
+    return;
+  }
+
+  for (const skillFile of skillFiles) {
+    const label = path.relative(root, skillFile);
+    for (const error of validateSkillContent({
+      content: fs.readFileSync(skillFile, "utf8"),
+      label,
+      expectedName: path.basename(path.dirname(skillFile)),
+    })) {
+      fail(error);
+    }
+  }
+}
+
 validateCursor();
 validateClaude();
 validateCodex();
 validateKiroHooks();
+validatePayloadSkills();
 
 if (errors.length) {
   for (const error of errors) console.error(`- ${error}`);

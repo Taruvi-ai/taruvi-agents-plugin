@@ -1,6 +1,6 @@
 ---
-name: codex-setup
-description: Configure Taruvi for Codex: app .env plus Codex plugin MCP guidance.
+name: "codex-setup"
+description: "Configure Taruvi for Codex: app .env plus Codex plugin MCP guidance."
 ---
 
 # codex-setup

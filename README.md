@@ -1,60 +1,64 @@
 # Taruvi Agents Plugin
 
-Source of truth for Taruvi agent support across Claude, Codex, Cursor, and
-Kiro.
+Connect AI coding agents (Claude Code, Codex, Cursor, Kiro) to TaruviBase with skills, hooks and MCP.
 
-The repository root is also a portable Agent Plugins v1 package:
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE) ![Node](https://img.shields.io/badge/node-%3E%3D18-blue)
 
-- `plugin.json` is the standards-compliant root manifest.
-- `skills/` is the fixed Agent Plugins skill discovery location, generated
-  from `src/skills/`.
-- `mcp.json` is intentionally empty for now because Agent Plugins v1 does not
-  define portable secret or tenant configuration for Taruvi's remote MCP
-  endpoint. Vendor-specific MCP templates remain under `payload/`.
+## Install
 
-## Install into a Taruvi template
-
-From a cloned Taruvi hacks template:
+From the root of your Taruvi Refine project:
 
 ```bash
 npx @taruvi/agents-plugin install
 ```
 
-The installer writes safe agent support files into the current project:
+`@taruvi/agents-plugin` is not on npm yet. Until it is, install from a clone:
 
-- `.agents/skills/`
-- `.agents/hooks/`
-- `.claude/`
-- `.codex/`
-- `.cursor/`
-- `.kiro/`
+```bash
+git clone https://github.com/Taruvi-ai/taruvi-agents-plugin.git
+node taruvi-agents-plugin/bin/taruvi-agents-plugin.js install --target <path-to-your-project>
+```
 
-It does not ask for credentials, does not create `.env`, and does not write
-local MCP secrets. After install, open your preferred agent and say:
+Then open your agent in the project and say:
 
 ```text
 setup taruvi
 ```
 
-That later setup flow writes app and MCP configuration from the Taruvi Connect
-block that the user pastes.
+Setup asks you to paste the Taruvi Connect block from your app's **Settings → Connect** page and writes the app and MCP configuration from it.
 
-## Develop
+## What it installs
 
-Shared product skills live once under `src/skills/`. Shared hook scripts live
-under `src/hooks/` and are installed into `.agents/hooks/`, with vendor folders
-symlinking to them when needed. Common setup behavior lives in
-`src/shared/setup-core.md`. Vendor setup skills are generated from that shared
-core plus vendor-specific guidance.
+| Path | Contents |
+|------|----------|
+| `.agents/skills/` | `taruvi-app-developer` (tables, policies, functions, storage) and `taruvi-refine-providers` (Refine frontends) |
+| `.agents/hooks/` | Shared Taruvi hook scripts |
+| `.claude/`, `.codex/`, `.cursor/`, `.kiro/` | Per-agent setup skills and configuration |
 
-Build the installer payload:
+The installer does not ask for credentials, create `.env`, or write MCP secrets. It adds `.env`, the local MCP config files and agent logs to `.gitignore`.
 
-```bash
-npm run build:vendor-files
+## Options
+
+```text
+taruvi-agents-plugin install [--target <dir>] [--allow-non-template]
 ```
 
-Run a local install test:
+- `--target <dir>`: project to install into (default: current directory)
+- `--allow-non-template`: install into a project that doesn't have the Taruvi Refine files the installer checks for (`package.json`, `src/taruviClient.ts`, `AGENTS.md`)
+
+## Learn more
+
+[Documentation](https://docs.taruvibase.com/) · [Website](https://taruvibase.com/)
+
+## Contributing
+
+Shared skills live in `src/skills/`, shared hooks in `src/hooks/`, and common setup behaviour in `src/shared/setup-core.md`. Vendor setup skills are generated from the shared core plus vendor-specific guidance. The repository root is also an Agent Plugins v1 package: `plugin.json` is the manifest, `skills/` is generated from `src/skills/`, and `mcp.json` stays empty because Agent Plugins v1 has no portable way to configure Taruvi's site MCP endpoint.
 
 ```bash
-node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template
+npm run build:vendor-files   # rebuild the installer payload
+npm test                     # validate and run a local install into /tmp
 ```
+
+## License
+
+MIT, see [LICENSE](LICENSE).

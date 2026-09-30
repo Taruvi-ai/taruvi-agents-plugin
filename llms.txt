@@ -1,6 +1,6 @@
 ---
 title: Taruvi Agents Plugin
-description: Source of truth for Taruvi agent support across Claude, Codex, Cursor, and Kiro.
+description: Connect AI coding agents (Claude Code, Codex, Cursor, Kiro) to TaruviBase with skills, hooks and MCP.
 type: overview
 ---
 
@@ -15,7 +15,7 @@ instructions, start with [README.md](README.md).
 
 ## Installation
 
-From a cloned Taruvi template, run:
+From the root of your Taruvi Refine project, run:
 
 ```bash
 npx @taruvi/agents-plugin install
@@ -24,6 +24,7 @@ npx @taruvi/agents-plugin install
 The installer writes agent support files into the current project:
 
 - `.agents/skills/`
+- `.agents/hooks/`
 - `.claude/`
 - `.codex/`
 - `.cursor/`
@@ -102,7 +103,7 @@ npm run build:vendor-files
 Run the local installer test:
 
 ```bash
-node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template
+node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --allow-non-template
 ```
 
 Run the package test script:

@@ -31,7 +31,7 @@ const OBSOLETE_INSTALLED_PATHS = [
 function usage(exitCode = 0) {
   const out = exitCode === 0 ? console.log : console.error;
   out(`Usage:
-  taruvi-agents-plugin install [--target <dir>] [--force] [--allow-non-template]
+  taruvi-agents-plugin install [--target <dir>] [--allow-non-template]
 
 Installs Claude, Codex, Cursor, and Kiro agent support into a Taruvi template.
 `);
@@ -42,7 +42,6 @@ function parseArgs(argv) {
   const args = {
     command: argv[2],
     target: process.cwd(),
-    force: false,
     allowNonTemplate: false,
   };
 
@@ -53,8 +52,6 @@ function parseArgs(argv) {
       if (!value) usage(1);
       args.target = path.resolve(value);
       index += 1;
-    } else if (arg === "--force") {
-      args.force = true;
     } else if (arg === "--allow-non-template") {
       args.allowNonTemplate = true;
     } else if (arg === "--help" || arg === "-h") {
@@ -97,7 +94,6 @@ function verifyTemplate(target, allowNonTemplate) {
     "package.json",
     "src/taruviClient.ts",
     "AGENTS.md",
-    "UI_Guidelines.md",
   ];
 
   const missing = markers.filter((marker) => !pathExists(path.join(target, marker)));

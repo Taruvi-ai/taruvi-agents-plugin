@@ -1,7 +1,7 @@
 {
   "name": "@taruvi/agents-plugin",
   "version": "0.1.0",
-  "description": "Installer for Taruvi agent support across Claude, Codex, Cursor, and Kiro.",
+  "description": "Connect AI coding agents (Claude Code, Codex, Cursor, Kiro) to TaruviBase with skills, hooks and MCP.",
   "type": "module",
   "bin": {
     "taruvi-agents-plugin": "./bin/taruvi-agents-plugin.js"
@@ -11,7 +11,7 @@
     "validate:agent-plugin": "node scripts/validate-agent-plugin.mjs",
     "validate:vendors": "node scripts/validate-vendor-files.mjs",
     "prepack": "npm run build:vendor-files",
-    "test": "npm run validate:agent-plugin && npm run build:vendor-files && npm run validate:vendors && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --force --allow-non-template"
+    "test": "npm run validate:agent-plugin && npm run build:vendor-files && npm run validate:vendors && node bin/taruvi-agents-plugin.js install --target /tmp/taruvi-agents-plugin-test --allow-non-template"
   },
   "files": [
     "bin/",
@@ -37,6 +37,11 @@
     "name": "Taruvi"
   },
   "license": "MIT",
+  "homepage": "https://docs.taruvibase.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Taruvi-ai/taruvi-agents-plugin.git"
+  },
   "engines": {
     "node": ">=18"
   }
